@@ -5,7 +5,7 @@ Tags: Elementor,Templates,Gutenberg,Block Editor,Astra Starter Sites
 Requires at least: 4.4
 Requires PHP: 7.4
 Tested up to: 6.5
-Stable tag: 4.1.4
+Stable tag: 4.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -247,6 +247,58 @@ Once your website is generated, you have complete control over its content and l
 
 == Changelog ==
 
+v4.2.5 - 21-May-2024
+- Fix: Resolved an issue that caused plugin activation errors on multisite installations.
+- Fix: Design Kit - The library not displaying on subdomain sites when the plugin is network activated.
+
+v4.2.4 - 17-May-2024
+- Improvement: Added a way to disable Classic Templates Importer.
+- Fix: Fixed broken WP-CLI import process for classic templates.
+
+v4.2.3 - 14-May-2024
+- Fix: Fixed the error while importing the classic templates.
+
+v4.2.2 - 10-May-2024
+- Improvement: Better error handling.
+- Improvement: Better preview for the color palette.
+- Improvement: Better UX while selecting Starter Templates.
+- Improvement: Improved the way Starter Templates stores JSON data while sync process to address memory issues.
+- Improvement: AI Builder - Improved the user experience by blocking unwanted options while processing data on a particular step.
+- Fix: Fixed an issue where the Starter Templates won't get imported on an RTL website.
+- Fix: Design Kit: Rectified an issue where the Template kit names went missing due to library update.
+- Fix: AI Builder - Fixed an issue where the import would remain stuck at 98%.
+- Fix: Made Starter Templates more secure while uploading SVG files.
+
+v4.2.1 - 03-May-2024
+- Fix: Fixed an incorrect type casting of a string on a popup for AI Builder.
+
+v4.2.0 - 29-April-2024
+- New: Added custom color palette selection option in AI Builder.
+- New: Added "Features" screen to the Classic Builder onboarding.
+- New: 'Load More' templates option in AI Builder.
+- New: Design Kit - Added language compatibility for personalizing the AI copy.
+- Improvement: Enhanced template search functionality.
+- Improvement: Improved the way Starter Templates store JSON data during the import process to address memory issues.
+- Improvement: Optimized and enhanced code for a better user experience.
+- Improvement: User Interface improvements for the Template Kit library.
+- Improvement: Design Kit - Improved responsive design and UX.
+- Improvement: Classic Templates - Improved responsive design and UX.
+- Improvement: Ability to edit the previous step of AI Onboarding by clicking on the sidebar.
+- Improvement: Now, Upload images are available in a new tab within same screen.
+- Fix: Resolved issue with import for RTL sites.
+- Fix: Design Kit - Fixed an issue where the Design Kit button was not visible on an FSE-based theme.
+- Fix: Design Kit - Fixed an issue where the line height of the Design Kit templates appeared messed up.
+- Fix: Design Kit - Fixed a fatal error caused by unavailable error_log related libraries on the user's server.
+
+v4.1.7 - 22-April-2024
+- Improvement: Hardened the security of the plugin.
+
+v4.1.6 - 09-April-2024
+- Fix: Resolved issue with Media library not functioning properly.
+
+v4.1.5 - 08-April-2024
+- Improvement: Streamlined the Gutenberg Templates library structure to reduce resource consumption.
+
 v4.1.4 - 01-April-2024
 - Fix: AI image replacement batch was inadvertently functioning for Classic editor templates.
 - Fix: Displaying "Download images fail" message when no images are selected during onboarding.
@@ -316,4 +368,4 @@ v4.0.0 - 03-January-2024
 v3.5.7 - 30-December-2023
 - Fix: Fixed Template Kit library conflict ( 503 Error ) with Gravity Form plugin.
 
-Check out the detailed changelog [here](https://wpastra.com/product/starter-templates-plugin/).
+Check out the detailed changelog [here](https://startertemplates.com/whats-new/).

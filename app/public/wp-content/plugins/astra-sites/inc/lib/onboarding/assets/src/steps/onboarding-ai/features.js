@@ -9,6 +9,7 @@ import {
 	WrenchIcon,
 } from '@heroicons/react/24/outline';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { STORE_KEY } from './store';
 import { classNames } from './helpers';
@@ -51,19 +52,26 @@ const Features = () => {
 			businessContact,
 			selectedTemplate,
 			siteLanguage,
+			templateList,
 		},
+		loadingNextStep,
 	} = useSelect( ( select ) => {
-		const { getSiteFeatures, getAIStepData } = select( STORE_KEY );
+		const { getSiteFeatures, getAIStepData, getLoadingNextStep } =
+			select( STORE_KEY );
 
 		return {
 			siteFeatures: getSiteFeatures(),
 			stepsData: getAIStepData(),
+			loadingNextStep: getLoadingNextStep(),
 		};
 	}, [] );
 	const [ isFetchingStatus, setIsFetchingStatus ] = useState(
 		fetchStatus.fetching
 	);
 	const [ isInProgress, setIsInProgress ] = useState( false );
+	const selectedTemplateItem = templateList?.find(
+		( item ) => item?.uuid === selectedTemplate
+	);
 
 	const fetchSiteFeatures = async () => {
 		const response = await apiFetch( {
@@ -77,6 +85,28 @@ const Features = () => {
 		if ( response?.success ) {
 			// Store to state.
 			storeSiteFeatures( response.data.data );
+
+			// Chemark based on template features settings.
+			const featuresMapping = {
+				blog_enabled: 'blog',
+				donation_enabled: 'donations',
+				store_enabled: 'sales-funnels',
+			};
+
+			Object.entries( featuresMapping ).forEach(
+				( [ featureKey, featureId ] ) => {
+					if (
+						selectedTemplateItem?.features?.[ featureKey ] === 'yes'
+					) {
+						const featureIndex = siteFeatures.findIndex(
+							( item ) => item.id === featureId
+						);
+						if ( featureIndex !== -1 ) {
+							setSiteFeatures( featureId );
+						}
+					}
+				}
+			);
 
 			// Set status to fetched.
 			return setIsFetchingStatus( fetchStatus.fetched );
@@ -187,10 +217,13 @@ const Features = () => {
 		<div className="grid grid-cols-1 gap-8 auto-rows-auto px-10 pb-10 pt-12 max-w-[880px] w-full mx-auto">
 			<div className="space-y-4">
 				<h1 className="text-3xl font-bold text-zip-app-heading">
-					Select features
+					{ __( 'Select features', 'astra-sites' ) }
 				</h1>
 				<p className="m-0 p-0 text-base font-normal text-zip-body-text">
-					Select the features you want on this website
+					{ __(
+						'Select the features you want on this website',
+						'astra-sites'
+					) }
 				</p>
 			</div>
 
@@ -206,6 +239,7 @@ const Features = () => {
 									'relative py-4 pl-4 pr-5 rounded-md shadow-sm border border-solid bg-white border-transparent transition-colors duration-150 ease-in-out',
 									feature.enabled && 'border-accent-st'
 								) }
+								data-disabled={ loadingNextStep }
 							>
 								<div className="flex items-start justify-start gap-3">
 									<div className="p-0.5 shrink-0">
@@ -275,7 +309,10 @@ const Features = () => {
 			{ isFetchingStatus === fetchStatus.error && (
 				<div className="flex items-center justify-center w-full px-5 py-5">
 					<p className="text-secondary-text text-center px-10 py-5 border-2 border-dashed border-border-primary rounded-md">
-						Something went wrong. Please try again later.
+						{ __(
+							'Something went wrong. Please try again later.',
+							'astra-sites'
+						) }
 					</p>
 				</div>
 			) }
@@ -289,7 +326,7 @@ const Features = () => {
 				onClickContinue={ handleGenerateContent() }
 				onClickSkip={ handleGenerateContent( true ) }
 				loading={ isInProgress }
-				skipButtonText="Skip & Start Building"
+				skipButtonText={ __( 'Skip & Start Building', 'astra-sites' ) }
 			/>
 		</div>
 	);

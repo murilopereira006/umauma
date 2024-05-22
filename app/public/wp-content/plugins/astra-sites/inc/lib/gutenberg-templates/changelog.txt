@@ -1,3 +1,44 @@
+v2.2.2 - 20-May-2024
+- Fix: Fixed design library was displaying empty on subfolder sites.
+
+v2.2.1 - 02-May-2024
+- Improvement: Better error message handling.
+- Improvement: Blocked everything after clicking on the continue button.
+- Fix: Removed the hotlinking of websitedemos link after import.
+
+v2.2.0 - 26-April-2024
+- Improvement: Revamped AI onboarding with language compatibility.
+- Improvement: User Interface Enhancements & tweaks.
+- Fix: JSON file names renamed correctly.
+
+v2.1.28 - 12-April-2024
+- Fix: Resolved line-height issue for blocks.
+
+v2.1.27 - 9-April-2024
+- Fix: Design library button not showing sometime.
+
+v2.1.26 - 9-April-2024
+- Fix: Fixed Media library not working.
+
+v2.1.25 - 8-April-2024
+- Fix: Custom permission fix for search category API.
+- Fix: Fixed an issue where the Personalisation of the library was failing.
+
+v2.1.24 - 5-April-2024
+- Fix: Improved parsing mechanism for social media icons to ensure error-free processing.
+
+v2.1.23 - 5-April-2024
+- Fix: Pre-selected images were not displaying.
+
+v2.1.22 - 4-April-2024
+- Improvement: Updated image replacement mechanisms to enhance compatibility with the ZipWP.
+
+v2.1.21 - 3 April-2024
+- New: Added business type selection option in onboarding.
+- Improvement: Using a ZipWP constant instead of a URL to facilitate easy overriding from the WordPress configuration.
+- Improvement: Automatically prefill business details for sites created through ZipWP.
+- Improvement: Moved JSON folder from plugin directory to WP upload folder to address memory issues.
+
 v2.1.20 - 1-April-2024
 - Improvement: Added Compatibility for Rank Match SEO plugin.
 

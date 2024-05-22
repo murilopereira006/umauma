@@ -10,7 +10,6 @@ import {
 	getFromSessionStorage,
 	getPatternsWithCategories,
 	getPagesWithCategories,
-	// getSpectraProStatus,
 	updateSequenceByCategory,
 	objSnakeToCamelCase,
 } from '../utils/helpers';
@@ -80,6 +79,7 @@ export const defaultOnboardingAIState = {
 	continueProgressModal: {
 		open: false,
 	},
+	loadingNextStep: false,
 };
 
 const keysToIgnore = [ 'limitExceedModal' ];
@@ -588,6 +588,14 @@ const reducer = ( state = initialState, action ) => {
 				limitExceedModal: action.payload,
 			},
 		};
+	} else if ( action.type === actionTypes.SET_AUTHENTICATION_ERROR_MODAL ) {
+		return {
+			...state,
+			onboardingAI: {
+				...state.onboardingAI,
+				authenticationErrorModal: action.payload,
+			},
+		};
 	} else if ( action.type === actionTypes.SET_CONTINUE_PROGRESS_MODAL ) {
 		return {
 			...state,
@@ -1067,6 +1075,16 @@ const reducer = ( state = initialState, action ) => {
 					...state.onboardingAI.stepData,
 					templateKeywords: action.payload,
 				},
+			},
+		};
+	}
+
+	if ( action.type === actionTypes.LOADING_NEXT_STEP ) {
+		return {
+			...state,
+			onboardingAI: {
+				...state.onboardingAI,
+				loadingNextStep: action.payload,
 			},
 		};
 	}

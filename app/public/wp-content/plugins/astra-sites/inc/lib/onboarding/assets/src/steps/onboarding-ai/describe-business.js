@@ -33,9 +33,10 @@ const DescribeBusiness = ( { onClickContinue, onClickPrevious } ) => {
 	} );
 
 	const aiOnboardingDetails = useSelect( ( select ) => {
-		const { getOnboardingAI } = select( STORE_KEY );
-		return getOnboardingAI();
-	} );
+			const { getOnboardingAI } = select( STORE_KEY );
+			return getOnboardingAI();
+		} ),
+		{ loadingNextStep } = aiOnboardingDetails;
 
 	const {
 		setWebsiteDetailsAIStep,
@@ -91,16 +92,12 @@ const DescribeBusiness = ( { onClickContinue, onClickPrevious } ) => {
 				},
 			} );
 			if ( response.success ) {
-				// setValue( 'businessDetails', response.data?.data, {
-				// 	shouldValidate: true,
-				// } );
 				const description = response.data?.data || [];
 				if ( description !== undefined ) {
 					newDescList.push( description );
 
 					addDescriptionToList( newDescList );
 
-					// setBusinessDesc( description );
 					setValue( 'businessDetails', description, {
 						shouldValidate: true,
 					} );
@@ -156,11 +153,11 @@ const DescribeBusiness = ( { onClickContinue, onClickPrevious } ) => {
 		}
 
 		return (
-			<h1>
+			<div className="text-[2rem] font-semibold leading-[45px]">
 				{ strings[ 0 ] }
 				<StyledText text={ businessName } />
 				{ strings[ 1 ] }
-			</h1>
+			</div>
 		);
 	};
 
@@ -243,7 +240,7 @@ const DescribeBusiness = ( { onClickContinue, onClickPrevious } ) => {
 
 		const newList = [ ...descriptionList ];
 
-		// check if user has made changes to current description and save that change in new slot
+		// Check if user has made changes to current description and save that change in new slot.
 		if ( descriptionList[ currentPageIndex ] !== formBusinessDetails ) {
 			newList[ currentPageIndex ] = formBusinessDetails;
 		}
@@ -260,18 +257,6 @@ const DescribeBusiness = ( { onClickContinue, onClickPrevious } ) => {
 				},
 			},
 		} );
-
-		// dispatch( {
-		// 	type: 'set',
-		// 	createWebsiteFormData: {
-		// 		...createWebsiteFormData,
-		// 		descriptionListStore: {
-		// 			...descriptionListStore,
-		// 			list: newList,
-		// 			currentPage: newPageNumber,
-		// 		},
-		// 	},
-		// } );
 	};
 
 	const addDescriptionToList = ( descList ) => {
@@ -299,18 +284,6 @@ const DescribeBusiness = ( { onClickContinue, onClickPrevious } ) => {
 				templateList: [],
 			},
 		} );
-
-		// dispatch( {
-		// 	type: 'set',
-		// 	createWebsiteFormData: {
-		// 		...createWebsiteFormData,
-		// 		descriptionListStore: {
-		// 			list: newDescList,
-		// 			currentPage: newDescList.length,
-		// 		},
-		// 		description,
-		// 	},
-		// } );
 	};
 
 	const setBusinessDesc = ( descriptionValue, isOnSubmit ) => {
@@ -329,27 +302,8 @@ const DescribeBusiness = ( { onClickContinue, onClickPrevious } ) => {
 					imagesPreSelected: false,
 				} ),
 				templateList: [],
-				// templateKeywords: [],
 			},
 		} );
-
-		// dispatch( {
-		// 	type: 'set',
-		// 	createWebsiteFormData: {
-		// 		...createWebsiteFormData,
-		// 		description: descriptionValue,
-		// 		...( ! isOnSubmit && {
-		// 			keywords: [],
-		// 			selectedImages: [],
-		// 			imagesPreSelected: false,
-		// 		} ),
-		// 	},
-		// 	createSiteInfo: {
-		// 		...createSiteInfo,
-		// 		templateList: [],
-		// 		templateKeywords: [],
-		// 	},
-		// } );
 	};
 
 	useEffect( () => {
@@ -383,42 +337,49 @@ const DescribeBusiness = ( { onClickContinue, onClickPrevious } ) => {
 					) }
 					name="businessDetails"
 					register={ register }
+					maxLength={ 1000 }
 					validations={ {
-						required: 'Details are required',
+						required: __( 'Details are required', 'astra-sites' ),
+						maxLength: 1000,
 					} }
 					error={ errors.businessDetails }
-					disabled={ isLoading }
+					disabled={ isLoading || loadingNextStep }
 				/>
 
 				{ /* Wand Button */ }
 				<div
 					className={ classNames(
-						'mt-3 flex items-center gap-2 text-app-secondary hover:text-app-accent-hover',
-						isLoading ? 'cursor-progress' : 'cursor-pointer'
+						'h-7 mt-3 flex items-center gap-2 text-app-secondary hover:text-app-accent-hover'
 					) }
 				>
 					{ isLoading && (
-						// <div className="loader border-2 border-t-gray-300 rounded-full border-t-2 border-blue-500 w-[15px] h-[15px] animate-spin" />
-						<LoadingSpinner className="text-accent-st" />
+						<LoadingSpinner className="text-accent-st cursor-progress" />
 					) }
 					{ ! isLoading && (
 						<div className="flex justify-between w-full">
 							<div
-								className="flex gap-2"
+								className="flex gap-2 cursor-pointer"
 								onClick={ handleGenerateContent }
+								data-disabled={ loadingNextStep }
 							>
 								<WandIcon className="w-5 h-5 transition duration-150 ease-in-out text-accent-st" />
 								<span className="font-semibold text-sm transition duration-150 ease-in-out text-accent-st">
 									{ formBusinessDetails?.trim() === ''
-										? 'Write Using AI'
-										: 'Improve Using AI' }
+										? __( 'Write Using AI', 'astra-sites' )
+										: __(
+												'Improve Using AI',
+												'astra-sites'
+										  ) }
 								</span>
 							</div>
 
 							{ descriptionPage > 0 &&
 								descriptionList?.length > 1 && (
 									<div className="flex gap-2 items-center justify-start w-[100px] cursor-default text-zip-body-text">
-										<div className="w-5">
+										<div
+											className="w-5"
+											data-disabled={ loadingNextStep }
+										>
 											{ descriptionPage !== 1 && (
 												<ChevronLeftIcon
 													className="w-5 cursor-pointer text-zip-body-text"
@@ -434,7 +395,10 @@ const DescribeBusiness = ( { onClickContinue, onClickPrevious } ) => {
 											{ descriptionPage } /{ ' ' }
 											{ descriptionList?.length }
 										</div>
-										<div className="w-5">
+										<div
+											className="w-5"
+											data-disabled={ loadingNextStep }
+										>
 											{ descriptionPage !==
 												descriptionList?.length && (
 												<ChevronRightIcon

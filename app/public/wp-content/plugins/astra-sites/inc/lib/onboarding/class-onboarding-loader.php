@@ -54,7 +54,7 @@ class Intelligent_Starter_Templates_Loader {
 		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-reporting.php';
 		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-zipwp-helper.php';
 		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-zipwp-integration.php';
-		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-replace-images.php';
+		// require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-replace-images.php';
 		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-zipwp-api.php';
 
 		// Admin Menu.
@@ -64,7 +64,8 @@ class Intelligent_Starter_Templates_Loader {
 		// Assets loading.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		add_filter( 'admin_init' , array( $this, 'st_brizy_flag_field' )  );
+		add_filter( 'admin_init' , array( $this, 'page_builder_field' )  );
+
 	}
 
 	/**
@@ -84,11 +85,6 @@ class Intelligent_Starter_Templates_Loader {
 	 * @since 3.0.0-beta.1
 	 */
 	public function menu_callback() {
-		$current_slug = isset( $_GET['action'] ) ? esc_attr( $_GET['action'] ) : 'general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Fetching a $_GET value, no nonce available to validate.
-		$active_tab   = str_replace( '_', '-', $current_slug );
-		if ( 'site-import' === $current_slug ) {
-			Astra_Sites_Page::get_instance()->init_nav_menu( $active_tab );
-		} else {
 		?>
 		<div class="astra-sites-menu-page-wrapper">
 			<div id="astra-sites-menu-page">
@@ -96,7 +92,6 @@ class Intelligent_Starter_Templates_Loader {
 			</div>
 		</div>
 		<?php
-		}
 	}
 
 	/**
@@ -154,7 +149,7 @@ class Intelligent_Starter_Templates_Loader {
 		wp_register_script(
 			'starter-templates-onboarding',
 			INTELLIGENT_TEMPLATES_URI . 'assets/dist/onboarding/main.js',
-			array_merge( $asset['dependencies'] ),
+			array_merge( $asset['dependencies'], array('updates') ),
 			$asset['version'],
 			true
 		);
@@ -162,7 +157,7 @@ class Intelligent_Starter_Templates_Loader {
 		$partner_id = apply_filters( 'zipwp_partner_url_param', '' );
 		$zipwp_auth = array(
 			'screen_url'   => ZIPWP_APP,
-			'redirect_url' => admin_url( 'themes.php?page=starter-templates' ),
+			'redirect_url' => admin_url( 'themes.php?page=ai-builder' ),
 		);
 
 		if( !empty( $partner_id ) ) {
@@ -232,7 +227,6 @@ class Intelligent_Starter_Templates_Loader {
 			'searchData' => Astra_Sites::get_instance()->get_api_domain() . 'wp-json/starter-templates/v1/ist-data',
 			'firstImportStatus' => get_option( 'astra_sites_import_complete', false ),
 			'supportLink' => 'https://wpastra.com/starter-templates-support/?ip=' . Astra_Sites_Helper::get_client_ip(),
-			'isBrizyEnabled'=> get_option( 'st-brizy-builder-flag'),
 			'isElementorDisabled'=> get_option( 'st-elementor-builder-flag'),
 			'isBeaverBuilderDisabled'=> get_option( 'st-beaver-builder-flag'),
 			'analytics' => get_site_option( 'bsf_analytics_optin', false ),
@@ -285,33 +279,28 @@ class Intelligent_Starter_Templates_Loader {
 	}
 
 	/**
-	 * Register Enable Brizy templates flag.
+	 * Register page builder templates flag.
 	 *
 	 * @return void
 	 */
-	public function st_brizy_flag_field() {
-		register_setting( 'general', 'st-brizy-builder-flag', 'esc_attr' );
+	public function page_builder_field() {
 		register_setting( 'general', 'st-elementor-builder-flag', 'esc_attr' );
 		register_setting( 'general', 'st-beaver-builder-flag', 'esc_attr' );
-		add_settings_field('st-brizy-builder-flag', '<label for="st-brizy-builder-flag">'. 'Starter Templates' . '</label>' , array($this, 'st_brizy_flag') , 'general' );
+		add_settings_field('' , '<label>'. 'Starter Templates' . '</label>' , array($this, 'page_builders_enable_disable_option') , 'general' );
 	}
 
 	/**
-	 * Enable Brizy templates flag markup.
+	 * Enable page builder templates flag markup.
 	 *
 	 * @return void
 	 */
-	public function st_brizy_flag() {
-		$value = get_option( 'st-brizy-builder-flag');
+	// page_builders_enable_disable_option
+	public function page_builders_enable_disable_option() {
 		$elementor_value = get_option( 'st-elementor-builder-flag');
 		$beaver_builder_value = get_option( 'st-beaver-builder-flag');
 		ob_start();
 		?>
 			<div style="display:flex;flex-direction:column;gap:15px;padding:10px;">
-				<label>
-					<input id='st-brizy-builder-flag' type='checkbox' name='st-brizy-builder-flag' value='1' <?php checked(1, $value, true); ?>>
-					<?php _e('Enable Brizy Page Builder Templates in Starter Templates','astra-sites'); ?>
-				</label>
 				<label>
 					<input id='st-elementor-builder-flag' type='checkbox' name='st-elementor-builder-flag' value='1' <?php checked(1, $elementor_value, true); ?>>
 					<?php _e('Disable Elementor Page Builder Templates in Starter Templates','astra-sites'); ?>
@@ -319,11 +308,15 @@ class Intelligent_Starter_Templates_Loader {
 				<label>
 					<input id='st-beaver-builder-flag' type='checkbox' name='st-beaver-builder-flag' value='1' <?php checked(1, $beaver_builder_value, true); ?>>
 					<?php _e('Disable Beaver Builder Page Builder Templates in Starter Templates','astra-sites'); ?>
-				</label>
+					</label>
 			</div>	
 		<?php
 		echo ob_get_clean();
 	}
+
+
+
+	
 
 }
 

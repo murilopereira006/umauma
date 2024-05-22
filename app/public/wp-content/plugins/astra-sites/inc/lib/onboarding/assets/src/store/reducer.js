@@ -26,7 +26,7 @@ export const initialState = {
 	aiActivePallette: null,
 	aiActiveTypography: null,
 	aiSiteLogo: siteLogoDefault,
-	currentIndex: 'ai-builder' === builderKey ? 1 : currentIndexKey,
+	currentIndex: 'ai-builder' === builderKey ? 0 : currentIndexKey,
 	currentCustomizeIndex: 0,
 	siteLogo: siteLogoDefault,
 	activePaletteSlug: 'default',
@@ -109,6 +109,8 @@ export const initialState = {
 	// Search.
 	searchTerms: [],
 	searchTermsWithCount: [],
+	enabledFeatureIds: [],
+	dismissAINotice: astraSitesVars.dismiss_ai_notice,
 };
 
 const reducer = ( state = initialState, { type, ...rest } ) => {
